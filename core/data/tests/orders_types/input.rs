@@ -14,7 +14,7 @@ pub struct D {
 #[typeshare]
 #[serde(rename_all = "camelCase")]
 pub struct C {
-    depends_on: B
+    depends_on: B,
 }
 
 #[typeshare]
@@ -26,6 +26,5 @@ pub struct B {
 #[typeshare]
 #[serde(rename_all = "camelCase")]
 pub struct A {
-    field: u32
+    field: u32,
 }
-
