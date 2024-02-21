@@ -361,6 +361,7 @@ tests! {
         },
         typescript,
     ];
+    test_internally_tagged_enum_case_name_support: [swift, kotlin, typescript];
     can_apply_prefix_correctly: [ swift { prefix: "OP".to_string(), }, kotlin, typescript ];
     can_generate_empty_adjacently_tagged_enum: [ swift { prefix: "OP".to_string(), }, kotlin, typescript];
     can_generate_adjacently_tagged_enum_with_skipped_variants: [swift, kotlin, typescript];
