@@ -19,14 +19,6 @@ pub struct KotlinParams {
 
 #[derive(Default, Serialize, Deserialize, Debug, PartialEq, Eq)]
 #[serde(default)]
-pub struct ScalaParams {
-    pub package: String,
-    pub module_name: String,
-    pub type_mappings: HashMap<String, String>,
-}
-
-#[derive(Default, Serialize, Deserialize, Debug, PartialEq, Eq)]
-#[serde(default)]
 pub struct SwiftParams {
     pub prefix: String,
     pub type_mappings: HashMap<String, String>,
@@ -40,15 +32,6 @@ pub struct TypeScriptParams {
     pub type_mappings: HashMap<String, String>,
 }
 
-#[derive(Default, Serialize, Deserialize, PartialEq, Eq, Debug)]
-#[serde(default)]
-#[cfg(feature = "go")]
-pub struct GoParams {
-    pub package: String,
-    pub type_mappings: HashMap<String, String>,
-    pub uppercase_acronyms: Vec<String>,
-}
-
 /// The paramters that are used to configure the behaviour of typeshare
 /// from the configuration file `typeshare.toml`
 #[derive(Serialize, Deserialize, Default, Debug, PartialEq)]
@@ -57,9 +40,6 @@ pub(crate) struct Config {
     pub swift: SwiftParams,
     pub typescript: TypeScriptParams,
     pub kotlin: KotlinParams,
-    pub scala: ScalaParams,
-    #[cfg(feature = "go")]
-    pub go: GoParams,
 }
 
 pub(crate) fn store_config(config: &Config, file_path: Option<&str>) -> Result<(), io::Error> {
@@ -145,10 +125,7 @@ mod test {
 
         assert_eq!(config.swift.type_mappings["DateTime"], "Date");
         assert_eq!(config.kotlin.type_mappings["DateTime"], "String");
-        assert_eq!(config.scala.type_mappings["DateTime"], "String");
         assert_eq!(config.typescript.type_mappings["DateTime"], "string");
-        #[cfg(feature = "go")]
-        assert_eq!(config.go.type_mappings["DateTime"], "string");
     }
 
     #[test]

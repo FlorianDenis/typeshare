@@ -9,10 +9,9 @@ use ignore::WalkBuilder;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use std::{fs, path::Path};
 use typeshare_core::language::GenericConstraints;
-#[cfg(feature = "go")]
-use typeshare_core::language::Go;
+
 use typeshare_core::{
-    language::{Kotlin, Language, Scala, SupportedLanguage, Swift, TypeScript},
+    language::{Kotlin, Language, SupportedLanguage, Swift, TypeScript},
     parser::ParsedData,
 };
 
@@ -24,19 +23,12 @@ const ARG_TYPE: &str = "TYPE";
 const ARG_SWIFT_PREFIX: &str = "SWIFTPREFIX";
 const ARG_JAVA_PACKAGE: &str = "JAVAPACKAGE";
 const ARG_MODULE_NAME: &str = "MODULENAME";
-const ARG_SCALA_PACKAGE: &str = "SCALAPACKAGE";
-const ARG_SCALA_MODULE_NAME: &str = "SCALAMODULENAME";
-#[cfg(feature = "go")]
-const ARG_GO_PACKAGE: &str = "GOPACKAGE";
+
 const ARG_CONFIG_FILE_NAME: &str = "CONFIGFILENAME";
 const ARG_GENERATE_CONFIG: &str = "generate-config-file";
 const ARG_OUTPUT_FILE: &str = "output-file";
 
-#[cfg(feature = "go")]
-const AVAILABLE_LANGUAGES: [&str; 5] = ["kotlin", "scala", "swift", "typescript", "go"];
-
-#[cfg(not(feature = "go"))]
-const AVAILABLE_LANGUAGES: [&str; 4] = ["kotlin", "scala", "swift", "typescript"];
+const AVAILABLE_LANGUAGES: [&str; 3] = ["kotlin", "swift", "typescript"];
 
 fn build_command() -> Command<'static> {
     command!("typeshare")
@@ -88,20 +80,6 @@ fn build_command() -> Command<'static> {
                 .required(false),
         )
         .arg(
-            Arg::new(ARG_SCALA_PACKAGE)
-                .long("scala-package")
-                .help("Scala package name")
-                .takes_value(true)
-                .required(false),
-        )
-        .arg(
-            Arg::new(ARG_SCALA_MODULE_NAME)
-                .long("scala-module-name")
-                .help("Scala serializer module name")
-                .takes_value(true)
-                .required(false),
-        )
-        .arg(
             Arg::new(ARG_CONFIG_FILE_NAME)
                 .short('c')
                 .long("config-file")
@@ -135,19 +113,7 @@ fn build_command() -> Command<'static> {
 }
 
 fn main() {
-    #[allow(unused_mut)]
-    let mut command = build_command();
-
-    #[cfg(feature = "go")]
-    {
-        command = command.arg(
-            Arg::new(ARG_GO_PACKAGE)
-                .long("go-package")
-                .help("Go package name")
-                .takes_value(true)
-                .required_if(ARG_TYPE, "go"),
-        );
-    }
+    let command = build_command();
 
     let options = command.get_matches();
 
@@ -196,27 +162,10 @@ fn main() {
             type_mappings: config.kotlin.type_mappings,
             ..Default::default()
         }),
-        Some(SupportedLanguage::Scala) => Box::new(Scala {
-            package: config.scala.package,
-            module_name: config.scala.module_name,
-            type_mappings: config.scala.type_mappings,
-            ..Default::default()
-        }),
         Some(SupportedLanguage::TypeScript) => Box::new(TypeScript {
             type_mappings: config.typescript.type_mappings,
             ..Default::default()
         }),
-        #[cfg(feature = "go")]
-        Some(SupportedLanguage::Go) => Box::new(Go {
-            package: config.go.package,
-            type_mappings: config.go.type_mappings,
-            uppercase_acronyms: config.go.uppercase_acronyms,
-            ..Default::default()
-        }),
-        #[cfg(not(feature = "go"))]
-        Some(SupportedLanguage::Go) => {
-            panic!("go support is currently experimental and must be enabled as a feature flag for typeshare-cli")
-        }
         _ => {
             panic!("argument parser didn't validate ARG_TYPE correctly");
         }
@@ -314,19 +263,6 @@ fn override_configuration(mut config: Config, options: &ArgMatches) -> Config {
 
     if let Some(module_name) = options.value_of(ARG_MODULE_NAME) {
         config.kotlin.module_name = module_name.to_string();
-    }
-
-    if let Some(scala_package) = options.value_of(ARG_SCALA_PACKAGE) {
-        config.scala.package = scala_package.to_string();
-    }
-
-    if let Some(scala_module_name) = options.value_of(ARG_SCALA_MODULE_NAME) {
-        config.scala.module_name = scala_module_name.to_string();
-    }
-
-    #[cfg(feature = "go")]
-    if let Some(go_package) = options.value_of(ARG_GO_PACKAGE) {
-        config.go.package = go_package.to_string();
     }
 
     config

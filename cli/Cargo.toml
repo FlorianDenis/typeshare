@@ -12,9 +12,6 @@ readme = "README.md"
 name = "typeshare"
 path = "src/main.rs"
 
-[features]
-go = []
-
 [dependencies]
 clap = { version = "3", features = ["cargo"] }
 clap_complete_command = "0.3"

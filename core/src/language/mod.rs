@@ -7,16 +7,12 @@ use itertools::Itertools;
 use proc_macro2::Ident;
 use std::{collections::HashMap, fmt::Debug, io::Write, str::FromStr};
 
-mod go;
 mod kotlin;
-mod scala;
 mod swift;
 mod typescript;
 
 use crate::rust_types::{RustType, RustTypeFormatError, SpecialRustType};
-pub use go::Go;
 pub use kotlin::Kotlin;
-pub use scala::Scala;
 pub use swift::GenericConstraints;
 pub use swift::Swift;
 pub use typescript::TypeScript;
@@ -25,9 +21,7 @@ pub use typescript::TypeScript;
 #[allow(missing_docs)]
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 pub enum SupportedLanguage {
-    Go,
     Kotlin,
-    Scala,
     Swift,
     TypeScript,
 }
@@ -36,7 +30,7 @@ impl SupportedLanguage {
     /// Returns an iterator over all supported language variants.
     pub fn all_languages() -> impl Iterator<Item = Self> {
         use SupportedLanguage::*;
-        [Go, Kotlin, Scala, Swift, TypeScript].into_iter()
+        [Kotlin, Swift, TypeScript].into_iter()
     }
 }
 
@@ -45,9 +39,7 @@ impl FromStr for SupportedLanguage {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "go" => Ok(Self::Go),
             "kotlin" => Ok(Self::Kotlin),
-            "scala" => Ok(Self::Scala),
             "swift" => Ok(Self::Swift),
             "typescript" => Ok(Self::TypeScript),
             _ => Err(ParseError::UnsupportedLanguage(s.into())),

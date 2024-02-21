@@ -5,7 +5,7 @@
 # repository.
 # https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/development/tools/rust/typeshare/default.nix#L32
 #
-# To use this in your repository, 
+# To use this in your repository,
 {
   description = "Create types in Rust and convert them to other languages";
 
@@ -29,7 +29,7 @@
 
           nativeBuildInputs = [ installShellFiles ];
 
-          buildFeatures = [ "go" ];
+          buildFeatures = [];
 
           postInstall = ''
             installShellCompletion --cmd typeshare \

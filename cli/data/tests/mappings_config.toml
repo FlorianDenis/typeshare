@@ -6,9 +6,3 @@
 
 [kotlin.type_mappings]
 "DateTime" = "String"
-
-[scala.type_mappings]
-"DateTime" = "String"
-
-[go.type_mappings]
-"DateTime" = "string"

@@ -374,8 +374,6 @@ impl RustField {
 #[derive(Debug, Error)]
 #[allow(missing_docs)]
 pub enum RustTypeFormatError {
-    #[error("Generic parameter `{0}` is forbidden in Go")]
-    GenericsForbiddenInGo(String),
     #[error("Generic type `{0}` cannot be used as a map key in Typescript")]
     GenericKeyForbiddenInTS(String),
 }
