@@ -172,7 +172,8 @@ impl Language for Kotlin {
                     shared.id.renamed, generic_parameters
                 )?;
             }
-            RustEnum::Algebraic { shared, .. } | RustEnum::FlattenedAlgebraic { shared, .. } => {
+            RustEnum::AdjacentlyTagged { shared, .. }
+            | RustEnum::InternallyTagged { shared, .. } => {
                 write!(
                     w,
                     "sealed class {}{} ",
@@ -204,7 +205,7 @@ impl Kotlin {
                     )?;
                 }
             }
-            RustEnum::Algebraic {
+            RustEnum::AdjacentlyTagged {
                 content_key,
                 shared,
                 ..
@@ -303,7 +304,7 @@ impl Kotlin {
                     )?;
                 }
             }
-            RustEnum::FlattenedAlgebraic { shared, .. } => {
+            RustEnum::InternallyTagged { shared, .. } => {
                 for v in &shared.variants {
                     let printed_value = format!(r##""{}""##, &v.shared().id.renamed);
                     self.write_comments(w, 1, &v.shared().comments)?;

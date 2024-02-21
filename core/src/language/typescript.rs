@@ -150,7 +150,8 @@ impl Language for TypeScript {
 
                 writeln!(w, "\n}}\n")
             }
-            RustEnum::Algebraic { shared, .. } | RustEnum::FlattenedAlgebraic { shared, .. } => {
+            RustEnum::AdjacentlyTagged { shared, .. }
+            | RustEnum::InternallyTagged { shared, .. } => {
                 write!(
                     w,
                     "export type {}{} = ",
@@ -181,9 +182,9 @@ impl TypeScript {
                 _ => unreachable!(),
             }),
 
-            // Write all the algebraic variants out (all three variant types are possible
+            // Write all the adjacently-tagged variants out (all three variant types are possible
             // here)
-            RustEnum::Algebraic {
+            RustEnum::AdjacentlyTagged {
                 tag_key,
                 content_key,
                 shared,
@@ -227,9 +228,9 @@ impl TypeScript {
                 }
             }),
 
-            // Write all the flattenned algebraic variants out (there can only be
+            // Write all the internally-tagged variants out (there can only be
             // unit and anonymous struct variants in this case)
-            RustEnum::FlattenedAlgebraic { tag_key, shared } => {
+            RustEnum::InternallyTagged { tag_key, shared } => {
                 shared.variants.iter().try_for_each(|v| {
                     writeln!(w)?;
                     self.write_comments(w, 1, &v.shared().comments)?;

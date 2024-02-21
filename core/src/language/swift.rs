@@ -442,7 +442,7 @@ impl Language for Swift {
                 always_present.append(&mut self.get_default_decorators());
                 always_present
             }
-            RustEnum::Algebraic { .. } | RustEnum::FlattenedAlgebraic { .. } => {
+            RustEnum::AdjacentlyTagged { .. } | RustEnum::InternallyTagged { .. } => {
                 self.get_default_decorators()
             }
         };
@@ -499,7 +499,7 @@ impl Language for Swift {
             )?;
         }
 
-        if let RustEnum::Algebraic {
+        if let RustEnum::AdjacentlyTagged {
             tag_key,
             content_key,
             ..
@@ -534,7 +534,7 @@ impl Language for Swift {
             )?;
         }
 
-        if let RustEnum::FlattenedAlgebraic { tag_key, .. } = e {
+        if let RustEnum::InternallyTagged { tag_key, .. } = e {
             writeln!(
                 w,
                 r#"
@@ -600,7 +600,7 @@ impl Swift {
                     }
                 }
             }
-            RustEnum::Algebraic {
+            RustEnum::AdjacentlyTagged {
                 tag_key,
                 content_key,
                 shared,
@@ -757,7 +757,7 @@ impl Swift {
                     writeln!(w)?;
                 }
             }
-            RustEnum::FlattenedAlgebraic { tag_key, shared } => {
+            RustEnum::InternallyTagged { tag_key, shared } => {
                 let generics = &shared.generic_types;
                 for v in &shared.variants {
                     self.write_comments(w, 1, &v.shared().comments)?;

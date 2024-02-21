@@ -200,7 +200,7 @@ macro_rules! language_instance {
 ///
 /// ```
 /// tests! {
-///    can_generate_algebraic_enum: [
+///    can_generate_adjacently_tagged_enum: [
 ///        swift {
 ///            prefix: "OP".to_string(),
 ///        },
@@ -296,7 +296,7 @@ static TYPESCRIPT_MAPPINGS: Lazy<HashMap<String, String>> = Lazy::new(|| {
 
 tests! {
     /// Enums
-    can_generate_algebraic_enum: [
+    can_generate_adjacently_tagged_enum: [
         swift {
             prefix: "OP".to_string(),
         },
@@ -306,7 +306,7 @@ tests! {
         },
         typescript,
     ];
-    can_generate_algebraic_enum_with_named_fields: [
+    can_generate_internally_tagged_enum: [
         swift {
             prefix: "OP".to_string(),
         },
@@ -315,7 +315,7 @@ tests! {
         },
         typescript
     ];
-    can_generate_generic_enum: [
+    can_generate_generic_adjacently_tagged_enum: [
         swift {
             prefix: "Core".into(),
         },
@@ -340,7 +340,7 @@ tests! {
     can_generate_readonly_fields: [
         typescript
     ];
-    can_generate_simple_enum: [
+    can_generate_unit_enum: [
         swift {
             prefix: "TypeShare".to_string(),
         },
@@ -350,8 +350,8 @@ tests! {
     can_generate_bare_string_enum: [swift, kotlin, typescript];
     can_generate_double_option_pattern: [typescript];
     can_recognize_types_inside_modules: [swift, kotlin, typescript];
-    test_simple_enum_case_name_support: [swift, kotlin, typescript];
-    test_algebraic_enum_case_name_support: [
+    test_unit_enum_case_name_support: [swift, kotlin, typescript];
+    test_adjacently_tagged_enum_case_name_support: [
         swift {
             prefix: "OP".to_string(),
         },
@@ -362,10 +362,10 @@ tests! {
         typescript,
     ];
     can_apply_prefix_correctly: [ swift { prefix: "OP".to_string(), }, kotlin, typescript ];
-    can_generate_empty_algebraic_enum: [ swift { prefix: "OP".to_string(), }, kotlin, typescript];
-    can_generate_algebraic_enum_with_skipped_variants: [swift, kotlin, typescript];
+    can_generate_empty_adjacently_tagged_enum: [ swift { prefix: "OP".to_string(), }, kotlin, typescript];
+    can_generate_adjacently_tagged_enum_with_skipped_variants: [swift, kotlin, typescript];
     can_generate_struct_with_skipped_fields: [swift, kotlin, typescript];
-    enum_is_properly_named_with_serde_overrides: [swift, kotlin,typescript];
+    unit_enum_is_properly_named_with_serde_overrides: [swift, kotlin,typescript];
     can_handle_quote_in_serde_rename: [swift, kotlin, typescript];
     can_handle_anonymous_struct: [swift, kotlin, typescript];
     test_generate_char: [swift, kotlin, typescript];
@@ -449,14 +449,14 @@ tests! {
     can_handle_unit_type: [swift, kotlin, typescript];
 
     //3 tests for adding decorators to enums and structs
-    const_enum_decorator: [ swift{ prefix: "OP".to_string(), } ];
-    algebraic_enum_decorator: [ swift{ prefix: "OP".to_string(), } ];
+    unit_enum_decorator: [ swift{ prefix: "OP".to_string(), } ];
+    adjacently_tagged_enum_decorator: [ swift{ prefix: "OP".to_string(), } ];
     struct_decorator: [ swift{ prefix: "OP".to_string(), } ];
     serialize_field_as: [kotlin, swift, typescript];
     serialize_type_alias: [kotlin, swift, typescript];
     serialize_anonymous_field_as: [kotlin, swift, typescript];
     smart_pointers: [kotlin, swift, typescript];
-    recursive_enum_decorator: [kotlin, swift, typescript];
+    recursive_adjacently_tagged_enum_decorator: [kotlin, swift, typescript];
 
     resolves_qualified_type: [
         swift {

@@ -64,12 +64,12 @@ fn get_enum_dependencies(
 ) {
     match enm {
         RustEnum::Unit(_) => {}
-        RustEnum::Algebraic {
+        RustEnum::AdjacentlyTagged {
             tag_key: _,
             content_key: _,
             shared,
         }
-        | RustEnum::FlattenedAlgebraic { tag_key: _, shared } => {
+        | RustEnum::InternallyTagged { tag_key: _, shared } => {
             if seen.insert(shared.id.original.to_string()) {
                 res.push(shared.id.original.to_string());
                 for variant in &shared.variants {
@@ -186,8 +186,8 @@ pub(crate) fn topsort(things: Vec<&RustItem>) -> Vec<&RustItem> {
     let types = HashMap::from_iter(things.iter().map(|&thing| {
         let id = match thing {
             RustItem::Enum(e) => match e {
-                RustEnum::Algebraic { shared, .. } => shared.id.original.clone(),
-                RustEnum::FlattenedAlgebraic { shared, .. } => shared.id.original.clone(),
+                RustEnum::AdjacentlyTagged { shared, .. } => shared.id.original.clone(),
+                RustEnum::InternallyTagged { shared, .. } => shared.id.original.clone(),
                 RustEnum::Unit(shared) => shared.id.original.clone(),
             },
             RustItem::Struct(strct) => strct.id.original.clone(),

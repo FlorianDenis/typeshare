@@ -482,14 +482,15 @@ pub enum RustEnum {
     /// }
     /// ```
     Unit(RustEnumShared),
-    /// An algebraic enum
+    /// An adjacently-tagged enum, containing a tag and a content field
     ///
     /// An example of such an enum:
     ///
     /// ```
     /// struct AssociatedData { /* ... */ }
     ///
-    /// enum AlgebraicEnum {
+    /// /// #[serde(tag = "t", content = "c")]
+    /// enum AdjacentlyTaggedEnum {
     ///     UnitVariant,
     ///     TupleVariant(AssociatedData),
     ///     AnonymousStruct {
@@ -498,7 +499,7 @@ pub enum RustEnum {
     ///     },
     /// }
     /// ```
-    Algebraic {
+    AdjacentlyTagged {
         /// The parsed value of the `#[serde(tag = "...")]` attribute
         tag_key: String,
         /// The parsed value of the `#[serde(content = "...")]` attribute
@@ -506,12 +507,14 @@ pub enum RustEnum {
         /// Shared context for this enum.
         shared: RustEnumShared,
     },
-    /// A flattened algebraic enum
+    /// A internally-tagged enum, only containing a tag
+    /// Those do not support anonymous enums, only anonymous structs
     ///
     /// An example of such an enum:
     ///
     /// ```
-    /// enum AlgebraicEnum {
+    /// /// #[serde(tag = "t")]
+    /// enum InternallyTaggedEnum {
     ///     UnitVariant,
     ///     AnonymousStruct {
     ///         field: String,
@@ -522,7 +525,7 @@ pub enum RustEnum {
     ///     },
     /// }
     /// ```
-    FlattenedAlgebraic {
+    InternallyTagged {
         /// The parsed value of the `#[serde(tag = "...")]` attribute
         tag_key: String,
         /// Shared context for this enum.
@@ -535,8 +538,8 @@ impl RustEnum {
     pub fn shared(&self) -> &RustEnumShared {
         match self {
             Self::Unit(shared)
-            | Self::Algebraic { shared, .. }
-            | Self::FlattenedAlgebraic { shared, .. } => shared,
+            | Self::AdjacentlyTagged { shared, .. }
+            | Self::InternallyTagged { shared, .. } => shared,
         }
     }
 }

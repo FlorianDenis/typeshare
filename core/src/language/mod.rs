@@ -252,7 +252,7 @@ pub trait Language {
         e: &RustEnum,
         make_struct_name: &dyn Fn(&str) -> String,
     ) -> std::io::Result<()> {
-        if let RustEnum::FlattenedAlgebraic { .. } = e {
+        if let RustEnum::InternallyTagged { .. } = e {
             return Ok(());
         }
 
